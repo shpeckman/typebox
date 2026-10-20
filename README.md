@@ -14,7 +14,7 @@ same schema and value, error messages included.
 ```yaml
 dependencies:
   typebox:
-    path: ../typebox
+    github: shpeckman/typebox
 ```
 
 ```crystal
@@ -41,22 +41,22 @@ User = T.object({
 User.to_json
 ```
 
-| Builder | JSON Schema |
-|---|---|
-| `T.string`, `T.number`, `T.integer`, `T.boolean`, `T.null` | `{"type": ...}` |
-| `T.void`, `T.undefined` | `{"type":"void"}`, `{"type":"undefined"}` |
-| `T.any`, `T.unknown` | `{}` |
-| `T.never` | `{"not":{}}` |
-| `T.literal(value)` | `{"type": ..., "const": value}` |
-| `T.enum(values)` | `{"enum": [...]}` |
-| `T.array(items)` | `{"type":"array","items": ...}` |
-| `T.tuple(items)` | `{"type":"array","additionalItems":false,"items":[...],"minItems":n}` |
-| `T.object(properties)` | `{"type":"object","required":[...],"properties":{...}}` |
-| `T.record(key, value)` | `patternProperties`, or an object when the key is a finite set of literals |
-| `T.union(types)` | `{"anyOf": [...]}` |
-| `T.intersect(types)` | `{"allOf": [...]}` |
-| `T.function(parameters, return_type)` | `{"type":"function","parameters":[...],"returnType": ...}` |
-| `T.unsafe(json)` | the given JSON, marked unsafe |
+| Builder                                                    | JSON Schema                                                                |
+|------------------------------------------------------------|----------------------------------------------------------------------------|
+| `T.string`, `T.number`, `T.integer`, `T.boolean`, `T.null` | `{"type": ...}`                                                            |
+| `T.void`, `T.undefined`                                    | `{"type":"void"}`, `{"type":"undefined"}`                                  |
+| `T.any`, `T.unknown`                                       | `{}`                                                                       |
+| `T.never`                                                  | `{"not":{}}`                                                               |
+| `T.literal(value)`                                         | `{"type": ..., "const": value}`                                            |
+| `T.enum(values)`                                           | `{"enum": [...]}`                                                          |
+| `T.array(items)`                                           | `{"type":"array","items": ...}`                                            |
+| `T.tuple(items)`                                           | `{"type":"array","additionalItems":false,"items":[...],"minItems":n}`      |
+| `T.object(properties)`                                     | `{"type":"object","required":[...],"properties":{...}}`                    |
+| `T.record(key, value)`                                     | `patternProperties`, or an object when the key is a finite set of literals |
+| `T.union(types)`                                           | `{"anyOf": [...]}`                                                         |
+| `T.intersect(types)`                                       | `{"allOf": [...]}`                                                         |
+| `T.function(parameters, return_type)`                      | `{"type":"function","parameters":[...],"returnType": ...}`                 |
+| `T.unsafe(json)`                                           | the given JSON, marked unsafe                                              |
 
 Modifiers:
 
@@ -70,18 +70,18 @@ property order: integer-like keys come first, in ascending order.
 
 `T.record` handles the key kinds below. Any other key gives an empty object.
 
-| Key | Result |
-|---|---|
-| `String` | `^.*$` |
-| `String` with a `pattern` option | that pattern |
-| `Number` | number pattern |
-| `Integer` | integer pattern |
-| `Any` | `^.*$` |
-| `Boolean` | `true`/`false` object |
-| `Literal` | single-key object |
-| `Enum` | evaluated to its literals |
-| `Union` | evaluated to its members |
-| `Intersect` | evaluated first |
+| Key                              | Result                    |
+|----------------------------------|---------------------------|
+| `String`                         | `^.*$`                    |
+| `String` with a `pattern` option | that pattern              |
+| `Number`                         | number pattern            |
+| `Integer`                        | integer pattern           |
+| `Any`                            | `^.*$`                    |
+| `Boolean`                        | `true`/`false` object     |
+| `Literal`                        | single-key object         |
+| `Enum`                           | evaluated to its literals |
+| `Union`                          | evaluated to its members  |
+| `Intersect`                      | evaluated first           |
 
 `Schema` keeps TypeBox's hidden markers as properties rather than JSON keys:
 
@@ -107,13 +107,13 @@ TypeBox::Value.clean(User, TypeBox::Value.clone(value))
 TypeBox::Value.default(T.object({n: T.number(default: 0)}), JSON.parse("{}"))
 ```
 
-| Function | Behavior |
-|---|---|
-| `Value.check(schema, value)` | `true` when the value matches the schema |
-| `Value.errors(schema, value)` | `Array(ValidationError)` with `keyword`, `schema_path`, `instance_path`, `params` and `message` |
-| `Value.default(schema, value)` | fills missing values from `default` annotations, mutating the value |
-| `Value.clean(schema, value)` | removes properties and elements the schema does not describe, mutating the value |
-| `Value.clone(value)` | deep copy that drops `__proto__`, `constructor` and `prototype` keys |
+| Function                       | Behavior                                                                                        |
+|--------------------------------|-------------------------------------------------------------------------------------------------|
+| `Value.check(schema, value)`   | `true` when the value matches the schema                                                        |
+| `Value.errors(schema, value)`  | `Array(ValidationError)` with `keyword`, `schema_path`, `instance_path`, `params` and `message` |
+| `Value.default(schema, value)` | fills missing values from `default` annotations, mutating the value                             |
+| `Value.clean(schema, value)`   | removes properties and elements the schema does not describe, mutating the value                |
+| `Value.clone(value)`           | deep copy that drops `__proto__`, `constructor` and `prototype` keys                            |
 
 Every function takes either a `Schema` or a plain `JSON::Any` schema. `ValidationError#to_json`
 writes the TypeBox field names (`schemaPath`, `instancePath`).
