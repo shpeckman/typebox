@@ -14,7 +14,7 @@ same schema and value, error messages included.
 ```yaml
 dependencies:
   typebox:
-    path: ../typebox
+    github: shpeckman/typebox
 ```
 
 ```crystal
